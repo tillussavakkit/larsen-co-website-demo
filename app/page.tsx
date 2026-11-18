@@ -1,29 +1,56 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ContactCta } from '@/components/contact-cta';
-import { company, competencies, owners, projects } from '@/data/site';
+import { LatestNews } from '@/components/latest-news';
+import { competencies, owners, projects } from '@/data/site';
+import { serializeJsonLd } from '@/lib/json-ld';
+import { getSiteContent } from '@/lib/site-content';
 import { siteUrl } from '@/lib/site-url';
 
-const structuredData = {
-  '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
-  name: company.name,
-  url: siteUrl,
-  telephone: company.phone,
-  email: company.email,
-  address: {
-    '@type': 'PostalAddress',
-    addressLocality: 'Nuuk',
-    addressCountry: 'GL',
-  },
-};
+export const dynamic = 'force-dynamic';
 
-export default function Home() {
+export async function generateMetadata() {
+  const content = await getSiteContent('home');
+  const title = content['home.seo.title'];
+  const description = content['home.seo.description'];
+  return {
+    title: { absolute: title },
+    description,
+    alternates: { canonical: siteUrl },
+    openGraph: { title, description, url: siteUrl },
+    twitter: { title, description },
+  };
+}
+
+export default async function Home() {
+  const content = await getSiteContent('home', 'competencies');
+  const name = content['global.company.name'];
+  const phone = content['global.company.phone'];
+  const description = content['global.company.description'];
+  const experience = content['global.company.experience'];
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'LocalBusiness',
+    name,
+    url: siteUrl,
+    telephone: phone,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Nuuk',
+      addressCountry: 'GL',
+    },
+  };
+  const pageCompetencies = competencies.map((competency, index) => ({
+    ...competency,
+    description:
+      content[index === 0 ? 'competencies.minor.body' : 'competencies.earth.body'],
+  }));
+
   return (
     <main id="main-content">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(structuredData) }}
       />
 
       <section className="hero" aria-labelledby="hero-heading">
@@ -38,15 +65,13 @@ export default function Home() {
         <div className="hero__shade" />
 
         <div className="hero__content shell">
-          <p className="eyebrow">Larsen & Co. · Nuuk</p>
-          <h1 id="hero-heading">Mere end 45 års erfaring</h1>
-          <p className="hero__lead">
-            Minør- og sprængningsarbejde samt jord- og terrænarbejde.
-          </p>
-          <p className="hero__body">Entreprenør- og minørfirma med base i Nuuk.</p>
+          <p className="eyebrow">{content['home.hero.eyebrow']}</p>
+          <h1 id="hero-heading">{content['home.hero.title']}</h1>
+          <p className="hero__lead">{content['home.hero.lead']}</p>
+          <p className="hero__body">{content['home.hero.body']}</p>
           <div className="hero__actions">
             <Link href="/kontakt" className="button button--yellow">
-              Kontakt os <span aria-hidden="true">↗</span>
+              Kontakt os
             </Link>
             <Link href="/kompetencer" className="button button--glass">
               Se vores kompetencer
@@ -54,29 +79,26 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="hero__foot shell" aria-label="Erfaring">
-          <strong>{company.experienceYears}</strong>
-          <span>{company.description}</span>
+        <div className="hero__foot shell" aria-label="Om Larsen & Co.">
+          <strong>{experience}</strong>
+          <span>{description}</span>
           <span className="hero__scroll" aria-hidden="true">
-            Scroll <i>↓</i>
+            Scroll
           </span>
         </div>
       </section>
 
       <section className="experience-section section-pad" aria-labelledby="experience-heading">
         <div className="experience-grid shell">
-          <p className="section-kicker">Erfaring, der kan mærkes</p>
+          <p className="section-kicker">{content['home.experience.kicker']}</p>
           <div className="experience-number" aria-hidden="true">
-            <strong>45</strong>
-            <span>+</span>
+            <strong>{experience}</strong>
           </div>
           <div className="experience-copy">
-            <h2 id="experience-heading">
-              Et stærkt udgangspunkt for arbejdet i fjeld og terræn.
-            </h2>
-            <p>{company.description}</p>
+            <h2 id="experience-heading">{content['home.experience.title']}</h2>
+            <p>{content['home.experience.body']}</p>
             <Link href="/om-os" className="text-link">
-              Mød Larsen & Co. <span aria-hidden="true">↗</span>
+              Mød Larsen & Co.
             </Link>
           </div>
         </div>
@@ -85,17 +107,16 @@ export default function Home() {
       <section className="competencies-home section-pad section-dark" aria-labelledby="competencies-heading">
         <div className="section-heading shell">
           <div>
-            <p className="section-kicker section-kicker--yellow">Kompetencer</p>
-            <h2 id="competencies-heading">To tydelige fagområder.</h2>
+            <p className="section-kicker section-kicker--yellow">
+              {content['home.competencies.kicker']}
+            </p>
+            <h2 id="competencies-heading">{content['home.competencies.title']}</h2>
           </div>
-          <p>
-            Larsen & Co. arbejder med minør- og sprængningsarbejde samt jord- og
-            terrænarbejde.
-          </p>
+          <p>{content['home.competencies.body']}</p>
         </div>
 
         <div className="competency-showcase shell">
-          {competencies.map((competency) => (
+          {pageCompetencies.map((competency) => (
             <article className="competency-panel" key={competency.id}>
               <div className="competency-panel__image">
                 <Image
@@ -116,19 +137,16 @@ export default function Home() {
 
         <div className="section-action shell">
           <Link href="/kompetencer" className="button button--outline-light">
-            Se alle kompetencer <span aria-hidden="true">↗</span>
+            Se alle kompetencer
           </Link>
         </div>
       </section>
 
       <section className="work-story section-pad" aria-labelledby="work-story-heading">
         <div className="work-story__heading shell">
-          <p className="section-kicker">Virkelige arbejdssteder</p>
-          <h2 id="work-story-heading">Fotografierne fortæller historien.</h2>
-          <p>
-            Autentiske billeder fra Larsen & Co.s arbejde viser materiel, terræn
-            og hverdagen omkring opgaverne.
-          </p>
+          <p className="section-kicker">{content['home.work.kicker']}</p>
+          <h2 id="work-story-heading">{content['home.work.title']}</h2>
+          <p>{content['home.work.body']}</p>
         </div>
 
         <div className="work-story__grid shell">
@@ -165,13 +183,10 @@ export default function Home() {
       <section className="projects-preview section-pad" aria-labelledby="projects-preview-heading">
         <div className="section-heading shell">
           <div>
-            <p className="section-kicker">Udvalgt arbejde</p>
-            <h2 id="projects-preview-heading">Fra arbejdspladsen.</h2>
+            <p className="section-kicker">{content['home.projects.kicker']}</p>
+            <h2 id="projects-preview-heading">{content['home.projects.title']}</h2>
           </div>
-          <p>
-            Et udvalg af virkelige billeder fra Larsen & Co.s arbejde i fjeld,
-            jord og terræn.
-          </p>
+          <p>{content['home.projects.body']}</p>
         </div>
 
         <div className="preview-strip">
@@ -190,7 +205,7 @@ export default function Home() {
 
         <div className="section-action shell">
           <Link href="/projekter" className="text-link">
-            Se hele billedarkivet <span aria-hidden="true">↗</span>
+            Se hele billedarkivet
           </Link>
         </div>
       </section>
@@ -217,17 +232,12 @@ export default function Home() {
           </div>
 
           <div className="about-preview__copy">
-            <p className="section-kicker section-kicker--yellow">Om Larsen & Co.</p>
-            <h2 id="about-preview-heading">Forankret i Nuuk.</h2>
-            <p className="large-copy">
-              Larsen & Co. er et entreprenør- og minørfirma med base i Nuuk.
-            </p>
-            <p>
-              Mere end 45 års erfaring med minør-, sprængnings-, jord- og
-              terrænarbejde er et stærkt fagligt udgangspunkt.
-            </p>
+            <p className="section-kicker section-kicker--yellow">{content['home.about.kicker']}</p>
+            <h2 id="about-preview-heading">{content['home.about.title']}</h2>
+            <p className="large-copy">{content['home.about.lead']}</p>
+            <p>{content['home.about.body']}</p>
             <Link href="/om-os" className="button button--outline-light">
-              Læs om virksomheden <span aria-hidden="true">↗</span>
+              Læs om virksomheden
             </Link>
           </div>
         </div>
@@ -236,12 +246,10 @@ export default function Home() {
       <section className="owners-home section-pad" aria-labelledby="owners-heading">
         <div className="owners-home__heading shell">
           <div>
-            <p className="section-kicker">Mød ejerne</p>
-            <h2 id="owners-heading">Jimmy & Benny.</h2>
+            <p className="section-kicker">{content['home.owners.kicker']}</p>
+            <h2 id="owners-heading">{content['home.owners.title']}</h2>
           </div>
-          <p>
-            Jimmy H. Rødgaard og Benny Larsen er ejere af Larsen & Co.
-          </p>
+          <p>{content['home.owners.body']}</p>
         </div>
 
         <div className="owners-grid shell">
@@ -275,15 +283,13 @@ export default function Home() {
         />
         <div className="winter-feature__shade" />
         <div className="winter-feature__content shell">
-          <p className="section-kicker section-kicker--yellow">Nuuk · Greenland</p>
-          <h2 id="winter-heading">Erfaring fra grønlandske forhold.</h2>
-          <p>
-            Billeder fra sne og vintermørke giver et autentisk indblik i
-            virkeligheden omkring arbejdet i Grønland.
-          </p>
+          <p className="section-kicker section-kicker--yellow">{content['home.winter.kicker']}</p>
+          <h2 id="winter-heading">{content['home.winter.title']}</h2>
+          <p>{content['home.winter.body']}</p>
         </div>
       </section>
 
+      <LatestNews />
       <ContactCta />
     </main>
   );

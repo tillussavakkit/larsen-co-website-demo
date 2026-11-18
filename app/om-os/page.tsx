@@ -2,23 +2,35 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ContactCta } from '@/components/contact-cta';
 import { PageHero } from '@/components/page-hero';
-import { company, competencies, owners } from '@/data/site';
+import { competencies, owners } from '@/data/site';
 import { createPageMetadata } from '@/lib/page-metadata';
+import { getSiteContent } from '@/lib/site-content';
 
-export const metadata = createPageMetadata({
-  title: 'Om os',
-  description:
-    'Mød Larsen & Co. i Nuuk og læs om mere end 45 års erfaring med minør-, sprængnings-, jord- og terrænarbejde.',
-  path: '/om-os',
-});
+export const dynamic = 'force-dynamic';
 
-export default function AboutPage() {
+export async function generateMetadata() {
+  const content = await getSiteContent('about');
+  return createPageMetadata({
+    title: content['about.seo.title'],
+    description: content['about.seo.description'],
+    path: '/om-os',
+  });
+}
+
+export default async function AboutPage() {
+  const content = await getSiteContent('about', 'competencies');
+  const pageCompetencies = competencies.map((competency, index) => ({
+    ...competency,
+    description:
+      content[index === 0 ? 'competencies.minor.body' : 'competencies.earth.body'],
+  }));
+
   return (
     <main id="main-content">
       <PageHero
-        eyebrow="Om Larsen & Co."
-        title="Erfaring. Materiel. Nuuk."
-        description="Et entreprenør- og minørfirma med mere end 45 års erfaring inden for minør-, sprængnings-, jord- og terrænarbejde."
+        eyebrow={content['about.hero.eyebrow']}
+        title={content['about.hero.title']}
+        description={content['about.hero.body']}
         image="/images/larsen-co/work/06-road-earthworks-nuuk.jpg"
         alt="Jordarbejde ved en vej"
         imagePosition="center 56%"
@@ -26,20 +38,14 @@ export default function AboutPage() {
 
       <section className="about-intro section-pad" aria-labelledby="about-intro-heading">
         <div className="about-intro__grid shell">
-          <p className="section-kicker">Larsen & Co. · Nuuk</p>
+          <p className="section-kicker">{content['about.intro.kicker']}</p>
           <div>
-            <h2 id="about-intro-heading">Erfaringen er udgangspunktet.</h2>
-            <p className="large-copy">
-              Larsen & Co. har mere end 45 års erfaring med minør- og
-              sprængningsarbejde samt jord- og terrænarbejde.
-            </p>
-            <p>
-              Larsen & Co. har base i Nuuk. Virksomhedens egne fotografier giver
-              et direkte indblik i materiellet, terrænet og arbejdet.
-            </p>
+            <h2 id="about-intro-heading">{content['about.intro.title']}</h2>
+            <p className="large-copy">{content['about.intro.lead']}</p>
+            <p>{content['about.intro.body']}</p>
           </div>
           <div className="about-intro__stat">
-            <strong>{company.experienceYears}</strong>
+            <strong>{content['global.company.experience']}</strong>
             <span>års erfaring</span>
           </div>
         </div>
@@ -67,11 +73,15 @@ export default function AboutPage() {
       <section className="about-competencies section-pad section-dark" aria-labelledby="about-competencies-heading">
         <div className="about-competencies__grid shell">
           <div>
-            <p className="section-kicker section-kicker--yellow">Faglig retning</p>
-            <h2 id="about-competencies-heading">Kerneområderne.</h2>
+            <p className="section-kicker section-kicker--yellow">
+              {content['about.competencies.kicker']}
+            </p>
+            <h2 id="about-competencies-heading">
+              {content['about.competencies.title']}
+            </h2>
           </div>
           <div className="about-competencies__list">
-            {competencies.map((competency) => (
+            {pageCompetencies.map((competency) => (
               <article key={competency.id}>
                 <span>{competency.number}</span>
                 <h3>{competency.title}</h3>
@@ -84,11 +94,9 @@ export default function AboutPage() {
 
       <section className="owners-page section-pad" aria-labelledby="about-owners-heading">
         <div className="owners-page__intro shell">
-          <p className="section-kicker">Mød ejerne</p>
-          <h2 id="about-owners-heading">Menneskerne bag.</h2>
-          <p>
-            Jimmy H. Rødgaard og Benny Larsen står som ejere af Larsen & Co.
-          </p>
+          <p className="section-kicker">{content['about.owners.kicker']}</p>
+          <h2 id="about-owners-heading">{content['about.owners.title']}</h2>
+          <p>{content['about.owners.body']}</p>
         </div>
 
         <div className="owners-grid shell">
@@ -105,7 +113,12 @@ export default function AboutPage() {
               </div>
               <div className="owner-card__content">
                 <span>{owner.role}</span>
-                <h3>{owner.name}</h3>
+                <div className="owner-name-contact">
+                  <h3>{owner.name}</h3>
+                  <a href={`mailto:${owner.email}`} style={{ display: "block", marginTop: "0.45rem", fontSize: "0.9rem", color: "inherit", textDecoration: "underline", textUnderlineOffset: "3px" }}>
+                    {owner.email}
+                  </a>
+                </div>
               </div>
             </article>
           ))}
@@ -113,7 +126,7 @@ export default function AboutPage() {
 
         <div className="section-action shell">
           <Link href="/kontakt" className="text-link">
-            Kontakt Larsen & Co. <span aria-hidden="true">↗</span>
+            Kontakt Larsen & Co.
           </Link>
         </div>
       </section>

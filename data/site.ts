@@ -3,11 +3,9 @@ export const company = {
   location: 'Nuuk, Greenland',
   phone: '+299 32 22 28',
   phoneHref: 'tel:+299322228',
-  email: 'Adm@larsenco.gl',
-emailHref: 'mailto:Adm@larsenco.gl',
-  experienceYears: '45+',
+  experienceYears: '',
   description:
-    'Mere end 45 års erfaring med minør- og sprængningsarbejde samt jord- og terrænarbejde.',
+    'Larsen & Co. udfører minør- og sprængningsarbejde samt jord- og terrænarbejde i Nuuk.',
 } as const;
 
 export const navigation = [
@@ -15,6 +13,7 @@ export const navigation = [
   { href: '/om-os', label: 'Om os' },
   { href: '/kompetencer', label: 'Kompetencer' },
   { href: '/projekter', label: 'Projekter' },
+  { href: '/nyheder', label: 'Nyheder' },
   { href: '/kontakt', label: 'Kontakt' },
 ] as const;
 
@@ -37,18 +36,20 @@ export const competencies = [
   },
 ] as const;
 
-// These are temporary reference images. Replace them with a matched set of
-// professional owner portraits when Larsen & Co. supplies the final photography.
+// Jimmy's portrait was supplied directly by Larsen & Co. Benny's remains a
+// temporary reference image until matching final photography is supplied.
 export const owners = [
   {
     name: 'Jimmy H. Rødgaard',
+    email: 'jimmy@larsenco.gl',
     role: 'Ejer',
-    image: '/images/larsen-co/owners/jimmy-h-roedgaard-reference.jpg',
+    image: '/images/larsen-co/owners/jimmy-h-roedgaard.jpg',
     alt: 'Jimmy H. Rødgaard',
     imagePosition: 'center center',
   },
   {
     name: 'Benny Larsen',
+    email: 'benny@larsenco.gl',
     role: 'Ejer',
     image: '/images/larsen-co/owners/benny-larsen-reference.jpg',
     alt: 'Benny Larsen i et sneklædt bjerglandskab',

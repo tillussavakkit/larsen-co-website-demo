@@ -87,7 +87,7 @@ export function ProjectGallery() {
             <span className="project-tile__overlay">
               <span>{String(index + 1).padStart(2, '0')}</span>
               <strong>{project.label}</strong>
-              <i aria-hidden="true">↗</i>
+
             </span>
           </button>
         ))}
@@ -142,7 +142,7 @@ export function ProjectGallery() {
                   }
                   aria-label="Forrige billede"
                 >
-                  ←
+                  Forrige
                 </button>
                 <button
                   type="button"
@@ -151,7 +151,7 @@ export function ProjectGallery() {
                   }
                   aria-label="Næste billede"
                 >
-                  →
+                  Næste
                 </button>
               </div>
             </div>

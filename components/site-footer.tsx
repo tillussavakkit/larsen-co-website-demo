@@ -1,9 +1,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { company, navigation } from '@/data/site';
+import { navigation } from '@/data/site';
+import { getSiteContent } from '@/lib/site-content';
 
-export function SiteFooter() {
+export async function SiteFooter() {
   const year = new Date().getFullYear();
+  const content = await getSiteContent();
+  const phone = content['global.company.phone'];
+  const phoneHref = `tel:${phone.replace(/[^+\d]/g, '')}`;
 
   return (
     <footer className="site-footer">
@@ -16,22 +20,14 @@ export function SiteFooter() {
             height={241}
             className="footer-logo"
           />
-          <p>{company.description}</p>
+          <p>{content['global.footer.description']}</p>
         </div>
 
         <div className="site-footer__contact">
-  <p className="footer-label">Kontakt</p>
-
-  <a href={company.phoneHref}>
-    {company.phone}
-  </a>
-
-  <a href={company.emailHref}>
-    {company.email}
-  </a>
-
-  <span>{company.location}</span>
-</div>
+          <p className="footer-label">Kontakt</p>
+          <a href={phoneHref}>{phone}</a>
+          <span>{content['global.company.location']}</span>
+        </div>
 
         <nav className="site-footer__nav" aria-label="Footer navigation">
           <p className="footer-label">Navigation</p>
@@ -44,8 +40,8 @@ export function SiteFooter() {
       </div>
 
       <div className="site-footer__bottom shell">
-        <span>© {year} Larsen & Co.</span>
-        <span>Nuuk · Greenland</span>
+        <span>© {year} {content['global.company.name']}</span>
+        <span>{content['global.footer.location']}</span>
       </div>
     </footer>
   );

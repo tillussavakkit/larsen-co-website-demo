@@ -1,7 +1,6 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-import { company } from '@/data/site';
 
 type FormStatus =
   | 'idle'
@@ -12,7 +11,7 @@ type FormStatus =
   | 'unavailable'
   | 'error';
 
-export function ContactForm() {
+export function ContactForm({ phone }: { phone: string }) {
   const [status, setStatus] = useState<FormStatus>('idle');
   const [messageLength, setMessageLength] = useState(0);
 
@@ -169,7 +168,7 @@ export function ContactForm() {
           disabled={status === 'sending'}
         >
           {status === 'sending' ? 'Sender…' : 'Send forespørgsel'}
-          <span aria-hidden="true">↗</span>
+
         </button>
         <p>Felter markeret med * skal udfyldes.</p>
       </div>
@@ -185,7 +184,7 @@ export function ContactForm() {
           <div className="form-status__message form-status__message--error">
             <strong>Beskeden kunne ikke sendes</strong>
             <span>
-              Prøv igen om et øjeblik, eller kontakt Larsen & Co. på {company.phone}.
+              Prøv igen om et øjeblik, eller kontakt Larsen & Co. på {phone}.
             </span>
           </div>
         )}
@@ -205,7 +204,7 @@ export function ContactForm() {
           <div className="form-status__message form-status__message--error">
             <strong>Formularen er midlertidigt utilgængelig</strong>
             <span>
-              Prøv igen senere, eller kontakt Larsen & Co. på {company.phone}.
+              Prøv igen senere, eller kontakt Larsen & Co. på {phone}.
             </span>
           </div>
         )}

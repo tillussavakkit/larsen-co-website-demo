@@ -3,13 +3,18 @@ import { ContactCta } from '@/components/contact-cta';
 import { PageHero } from '@/components/page-hero';
 import { competencies } from '@/data/site';
 import { createPageMetadata } from '@/lib/page-metadata';
+import { getSiteContent } from '@/lib/site-content';
 
-export const metadata = createPageMetadata({
-  title: 'Kompetencer',
-  description:
-    'Larsen & Co. arbejder med minør- og sprængningsarbejde samt jord- og terrænarbejde.',
-  path: '/kompetencer',
-});
+export const dynamic = 'force-dynamic';
+
+export async function generateMetadata() {
+  const content = await getSiteContent('competencies');
+  return createPageMetadata({
+    title: content['competencies.seo.title'],
+    description: content['competencies.seo.description'],
+    path: '/kompetencer',
+  });
+}
 
 const supportingImages = [
   {
@@ -22,13 +27,20 @@ const supportingImages = [
   },
 ];
 
-export default function CompetenciesPage() {
+export default async function CompetenciesPage() {
+  const content = await getSiteContent('competencies');
+  const pageCompetencies = competencies.map((competency, index) => ({
+    ...competency,
+    description:
+      content[index === 0 ? 'competencies.minor.body' : 'competencies.earth.body'],
+  }));
+
   return (
     <main id="main-content">
       <PageHero
-        eyebrow="Kompetencer"
-        title="Faglighed i fjeld og terræn."
-        description="Minør- og sprængningsarbejde samt jord- og terrænarbejde."
+        eyebrow={content['competencies.hero.eyebrow']}
+        title={content['competencies.hero.title']}
+        description={content['competencies.hero.body']}
         image="/images/larsen-co/work/02-rock-excavation-blue-building.jpg"
         alt="Gravemaskine arbejder i stenet terræn ved en blå bygning"
         imagePosition="center 58%"
@@ -36,17 +48,14 @@ export default function CompetenciesPage() {
 
       <section className="competencies-intro section-pad" aria-labelledby="competencies-intro-heading">
         <div className="page-intro shell">
-          <p className="section-kicker">Fagområder</p>
-          <h2 id="competencies-intro-heading">Erfaring i fjeld og terræn.</h2>
-          <p>
-            Larsen & Co. har mere end 45 års erfaring inden for minør- og
-            sprængningsarbejde samt jord- og terrænarbejde.
-          </p>
+          <p className="section-kicker">{content['competencies.intro.kicker']}</p>
+          <h2 id="competencies-intro-heading">{content['competencies.intro.title']}</h2>
+          <p>{content['competencies.intro.body']}</p>
         </div>
       </section>
 
       <section className="competencies-detail section-dark" aria-label="Kompetencer">
-        {competencies.map((competency, index) => (
+        {pageCompetencies.map((competency, index) => (
           <article className="competency-detail" key={competency.id} id={competency.id}>
             <div className="competency-detail__image">
               <Image
@@ -60,10 +69,7 @@ export default function CompetenciesPage() {
               <span>{competency.number}</span>
               <h2>{competency.title}</h2>
               <p>{competency.description}</p>
-              <p>
-                De viste fotografier er fra Larsen & Co.s virkelige arbejde.
-                Konkrete ydelser og opgavens rammer afklares ved direkte kontakt.
-              </p>
+              <p>{content['competencies.detail.note']}</p>
             </div>
             <div className="competency-detail__support">
               <Image
@@ -79,13 +85,10 @@ export default function CompetenciesPage() {
 
       <section className="competencies-note section-pad" aria-labelledby="competencies-note-heading">
         <div className="competencies-note__grid shell">
-          <p className="section-kicker">Direkte dialog</p>
+          <p className="section-kicker">{content['competencies.closing.kicker']}</p>
           <div>
-            <h2 id="competencies-note-heading">Lad os tale om opgaven.</h2>
-            <p>
-              Kontakt Larsen & Co. for at afklare opgavens rammer og de relevante
-              fagområder.
-            </p>
+            <h2 id="competencies-note-heading">{content['competencies.closing.title']}</h2>
+            <p>{content['competencies.closing.body']}</p>
           </div>
         </div>
       </section>

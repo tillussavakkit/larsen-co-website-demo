@@ -31,7 +31,7 @@ export function createPageMetadata({
           url: '/og.png',
           width: 1200,
           height: 630,
-          alt: 'Larsen & Co. — mere end 45 års erfaring',
+          alt: 'Larsen & Co. — entreprenørarbejde i Nuuk',
         },
       ],
     },

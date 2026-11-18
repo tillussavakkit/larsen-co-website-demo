@@ -1,8 +1,7 @@
 'use client';
 
-/* eslint-disable @next/next/no-html-link-for-pages */
-
 import Image from 'next/image';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { navigation } from '@/data/site';
@@ -12,37 +11,24 @@ type SiteHeaderProps = {
 };
 
 export function SiteHeader({ tone = 'solid' }: SiteHeaderProps) {
-const pathname = usePathname();
+  const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const firstMobileLinkRef = useRef<HTMLAnchorElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 24);
-    };
-
+    const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
-
-    window.addEventListener('scroll', onScroll, {
-      passive: true,
-    });
-
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   useEffect(() => {
-    if (!menuOpen) {
-      return;
-    }
+    if (!menuOpen) return;
 
     const previousOverflow = document.body.style.overflow;
-
     document.body.style.overflow = 'hidden';
     firstMobileLinkRef.current?.focus();
 
@@ -50,39 +36,31 @@ const pathname = usePathname();
       if (event.key === 'Escape') {
         setMenuOpen(false);
         menuButtonRef.current?.focus();
-        return;
       }
+      if (event.key === 'Tab') {
+        const focusable = [
+          menuButtonRef.current,
+          ...Array.from(
+            mobileMenuRef.current?.querySelectorAll<HTMLAnchorElement>('a') ?? [],
+          ),
+        ].filter(
+          (element): element is HTMLButtonElement | HTMLAnchorElement =>
+            element !== null,
+        );
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
 
-      if (event.key !== 'Tab') {
-        return;
-      }
-
-      const focusable = [
-        menuButtonRef.current,
-        ...Array.from(
-          mobileMenuRef.current?.querySelectorAll<HTMLAnchorElement>('a') ?? [],
-        ),
-      ].filter(
-        (
-          element,
-        ): element is HTMLButtonElement | HTMLAnchorElement =>
-          element !== null,
-      );
-
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last?.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first?.focus();
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first?.focus();
+        }
       }
     };
 
     window.addEventListener('keydown', onKeyDown);
-
     return () => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener('keydown', onKeyDown);
@@ -91,14 +69,12 @@ const pathname = usePathname();
 
   return (
     <header
-      className={`site-header site-header--${tone}${
-        scrolled ? ' is-scrolled' : ''
-      }${menuOpen ? ' is-open' : ''}`}
+      className={`site-header site-header--${tone}${scrolled ? ' is-scrolled' : ''}${menuOpen ? ' is-open' : ''}`}
     >
       <div className="site-header__inner shell">
-        <a
+        <Link
           href="/"
-          aria-label="Larsen & Co. – forside"
+          aria-label="Larsen & Co. — forside"
           className="brand-link"
           onClick={() => setMenuOpen(false)}
         >
@@ -110,32 +86,24 @@ const pathname = usePathname();
             className="brand-logo"
             priority
           />
-        </a>
+        </Link>
 
-        <nav
-          aria-label="Primær navigation"
-          className="desktop-nav"
-        >
+        <nav aria-label="Primær navigation" className="desktop-nav">
           {navigation.map((item) => (
-            <a
+            <Link
               href={item.href}
               key={item.href}
-              aria-current={
-                pathname === item.href ? 'page' : undefined
-              }
+              aria-current={pathname === item.href ? 'page' : undefined}
             >
               {item.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
-        <a
-          href="/kontakt"
-          className="button button--yellow header-cta"
-        >
+        <Link href="/kontakt" className="button button--yellow header-cta">
           Kontakt os
-          <span aria-hidden="true">↗</span>
-        </a>
+
+        </Link>
 
         <button
           ref={menuButtonRef}
@@ -157,37 +125,26 @@ const pathname = usePathname();
         className="mobile-menu"
         hidden={!menuOpen}
       >
-        <nav
-          aria-label="Mobil navigation"
-          className="shell"
-        >
+        <nav aria-label="Mobil navigation" className="shell">
           {navigation.map((item, index) => (
-            <a
+            <Link
               href={item.href}
               key={item.href}
-              ref={
-                index === 0
-                  ? firstMobileLinkRef
-                  : undefined
-              }
-              aria-current={
-                pathname === item.href ? 'page' : undefined
-              }
+              ref={index === 0 ? firstMobileLinkRef : undefined}
+              aria-current={pathname === item.href ? 'page' : undefined}
               onClick={() => setMenuOpen(false)}
             >
               <span>0{index + 1}</span>
               {item.label}
-            </a>
+            </Link>
           ))}
-
-          <a
+          <Link
             href="/kontakt"
             className="mobile-menu__cta"
             onClick={() => setMenuOpen(false)}
           >
             Start en henvendelse
-            <span aria-hidden="true">↗</span>
-          </a>
+          </Link>
         </nav>
       </div>
     </header>

@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     template: '%s | Larsen & Co.',
   },
   description:
-    'Larsen & Co. i Nuuk har mere end 45 års erfaring med minør- og sprængningsarbejde samt jord- og terrænarbejde.',
+    'Larsen & Co. i Nuuk udfører minør- og sprængningsarbejde samt jord- og terrænarbejde.',
   alternates: { canonical: siteUrl },
   icons: {
     icon: '/favicon.png',
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     url: siteUrl,
     title: 'Larsen & Co. | Entreprenør- og minørfirma i Nuuk',
     description:
-      'Mere end 45 års erfaring med minør- og sprængningsarbejde samt jord- og terrænarbejde.',
+      'Larsen & Co. udfører minør- og sprængningsarbejde samt jord- og terrænarbejde i Nuuk.',
     type: 'website',
     locale: 'da_DK',
     siteName: 'Larsen & Co.',
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
         url: '/og.png',
         width: 1200,
         height: 630,
-        alt: 'Larsen & Co. — mere end 45 års erfaring',
+        alt: 'Larsen & Co. — entreprenørarbejde i Nuuk',
       },
     ],
   },
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Larsen & Co. | Entreprenør- og minørfirma i Nuuk',
     description:
-      'Mere end 45 års erfaring med minør- og sprængningsarbejde samt jord- og terrænarbejde.',
+      'Larsen & Co. udfører minør- og sprængningsarbejde samt jord- og terrænarbejde i Nuuk.',
     images: ['/og.png'],
   },
 };
