@@ -173,6 +173,11 @@ export function ContactForm({ phone }: { phone: string }) {
         <p>Felter markeret med * skal udfyldes.</p>
       </div>
 
+      <p className="contact-form__privacy">
+        Vi bruger dine oplysninger til at besvare henvendelsen. Læs vores{' '}
+        <a href="/privatlivspolitik">privatlivspolitik</a>.
+      </p>
+
       <div className="form-status" aria-live="polite" aria-atomic="true">
         {status === 'success' && (
           <div className="form-status__message form-status__message--success">
