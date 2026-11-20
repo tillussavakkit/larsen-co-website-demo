@@ -2502,3 +2502,104 @@ button {
     font-size: clamp(3.5rem, 13vw, 6rem);
   }
 }
+
+
+/* Larsen & Co legal pages and footer links */
+.legal-page {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.legal-page__masthead {
+  padding: calc(var(--header-height) + 5.5rem) 0 clamp(3rem, 7vw, 6rem);
+  background: var(--charcoal);
+  color: var(--white);
+}
+
+.legal-page__masthead h1 {
+  margin: 1.25rem 0 1rem;
+  font-size: clamp(3rem, 7vw, 6.5rem);
+  font-weight: 760;
+  line-height: 0.98;
+  letter-spacing: -0.06em;
+}
+
+.legal-page__masthead > .shell > p:last-child {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.9rem;
+}
+
+.legal-page__content {
+  max-width: 950px;
+  padding-block: clamp(3rem, 7vw, 6rem) clamp(5rem, 9vw, 9rem);
+}
+
+.legal-page__lead {
+  max-width: 800px;
+  margin: 0 0 3.5rem;
+  font-size: clamp(1.2rem, 2vw, 1.65rem);
+  font-weight: 550;
+  line-height: 1.5;
+}
+
+.legal-page__content section {
+  margin-block: 2.8rem;
+}
+
+.legal-page__content h2 {
+  margin: 0 0 1rem;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 730;
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+
+.legal-page__content section p {
+  max-width: 780px;
+  margin: 0.8rem 0;
+  color: #4d504a;
+  line-height: 1.8;
+}
+
+.legal-page__content a,
+.contact-form__privacy a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.legal-page__content a:hover,
+.contact-form__privacy a:hover {
+  color: #846800;
+}
+
+.footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.5rem;
+}
+
+.footer-legal a {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.footer-legal a:hover {
+  color: var(--yellow);
+}
+
+.contact-form__privacy {
+  margin-top: 1rem;
+  color: var(--muted);
+  font-size: 0.83rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 760px) {
+  .legal-page__masthead {
+    padding-top: calc(var(--header-height) + 4rem);
+  }
+
+  .legal-page__content {
+    padding-block: 3.5rem 5rem;
+  }
+}
