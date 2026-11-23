@@ -93,6 +93,9 @@ export default function AdminLoginPage() {
         </Link>
 
         <p className="admin-login__help">
+          <Link href="/admin/adgangskode">Glemt adgangskode eller ny konto? Vælg din adgangskode</Link>
+        </p>
+        <p className="admin-login__help">
           Kontakt BB Digital ApS, hvis du har brug for administratoradgang.
         </p>
       </section>
