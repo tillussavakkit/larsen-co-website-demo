@@ -1,5 +1,5 @@
 const fallbackSiteUrl =
-  'https://larsen-co-nuuk-demo.brianbiilmann.chatgpt.site';
+  'https://larsenco.gl';
 
 function trustedSiteOrigin(value: string | undefined) {
   const configured = value?.trim();

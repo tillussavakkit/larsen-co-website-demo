@@ -41,6 +41,10 @@ export async function SiteFooter() {
 
       <div className="site-footer__bottom shell">
         <span>© {year} {content['global.company.name']}</span>
+        <nav className="footer-legal" aria-label="Juridiske oplysninger">
+          <Link href="/privatlivspolitik">Privatlivspolitik</Link>
+          <Link href="/cookiepolitik">Cookiepolitik</Link>
+        </nav>
         <span>{content['global.footer.location']}</span>
       </div>
     </footer>
