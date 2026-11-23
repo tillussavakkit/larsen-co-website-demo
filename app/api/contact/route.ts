@@ -122,9 +122,12 @@ export async function POST(request: Request) {
 
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.RESEND_FROM_EMAIL;
-  const to = process.env.LARSEN_CONTACT_EMAIL;
+  const recipients = (process.env.LARSEN_CONTACT_EMAIL ?? '')
+    .split(',')
+    .map((email) => email.trim())
+    .filter(Boolean);
 
-  if (!apiKey || !from || !to) {
+  if (!apiKey || !from || recipients.length === 0) {
     return NextResponse.json({ ok: false }, { status: 503 });
   }
 
@@ -140,7 +143,7 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify({
         from,
-        to: [to],
+        to: recipients,
         reply_to: result.data.email,
         subject: 'Ny forespørgsel via Larsen & Co.s hjemmeside',
         html,
