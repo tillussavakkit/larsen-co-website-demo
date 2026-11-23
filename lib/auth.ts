@@ -44,7 +44,7 @@ function createAuth() {
               'Hvis du ikke har bedt om denne mail, kan du se bort fra den.',
               '',
               'Larsen & Co. / BB Digital ApS',
-            ].join('\\n'),
+            ].join('\n'),
           }),
         });
         if (!response.ok) {
